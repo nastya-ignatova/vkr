@@ -72,7 +72,7 @@ function buildCharts(data) {
 function updateData() {
     let hour_24 = document.getElementById('by_24_hour').checked ? 1 : 0;
     let date = document.getElementById('date').value;
-    getJSON(`json.php?calendar=${date}&is_hours=${hour_24}`,
+    getJSON(`http://localhost/weather/json.php?calendar=${date}&is_hours=${hour_24}`,
     function(err, data) {
     if (err !== null) {
         alert('Something went wrong: ' + err);

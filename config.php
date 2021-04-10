@@ -5,8 +5,8 @@ error_reporting(0);
 
 $servername = "localhost";
 $database = "weather";
-$username = "nastya.ignatova.99";
-$password = "vigodu39";
+$username = "root";
+$password = "vigodu391";
 // Создаем соединение
 $conn = mysqli_connect($servername, $username, $password, $database);
 // Проверяем соединение
