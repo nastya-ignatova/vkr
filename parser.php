@@ -1,7 +1,7 @@
 <?php
 include "config.php";
 
-    $filename = "C:\\Apache24\\htdocs\\weather\\Am_12_2020-07-07.csv";//filename хз какой
+    $filename = "Am_12_2020-07-08.csv";//filename хз какой
     if (file_exists (  $filename )) {//если файл существует на сервере
         $fp = fopen($filename, "r");
         fgetcsv($fp, 0, ";");
