@@ -57,28 +57,6 @@ else
 }
 if (isset($_POST['download']))
 {
-    for ($i = 0;$i < count($list);$i++)
-    { //цикл по строкам
-        for ($f = 1;$f < 8;$f++)
-        { //цикл по столбцам
-            $content .= $list[$i][$f].';';
-        }
-
-        $content .= "\r\n";
-    }
- 
-    $filename = $calendar . '.csv';
-
-    // заставляем браузер показать окно сохранения файла
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename=' . basename($filename));
-    header('Content-Length: ' . filesize($filename));
-    echo $content;
-    exit;
-
-
-
-/*
     $filed = $calendar.".csv";
     for ($i = 0;$i < count($list);$i++)
     { //цикл по строкам
@@ -90,7 +68,6 @@ if (isset($_POST['download']))
         $rez .= "\r\n";
     }
     file_put_contents($filed, $rez);
-*/
 }
 $html = str_replace('$main_html', "$main_html", $html);
 echo  $html;

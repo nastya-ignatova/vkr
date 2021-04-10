@@ -22,33 +22,8 @@ function from_db_to_json($calendar, $is_hours)
             $i++;
         }
 
-        /* if ($is_hours==true) {
-        
-          $table_by_hour = array();
-          $table_by_hour[0]=$list[0];
-              for ($i=1;$i<count($list);$i++){
-                  if (Date("H", mktime(end($table_by_hour)[1]))!=Date("H", mktime($list[$i][1])))
-                      {
-                          $table_by_hour[] =$list[$i];
-                      }
-                  }
-                  $json = json_encode($table_by_hour, JSON_UNESCAPED_UNICODE);
-        return[true, $table_by_hour, $json, 24];
-        }  else {
-        
-            $json = json_encode($list, JSON_UNESCAPED_UNICODE);
-            return[true, $list, $json, $rows_count];
-            }*/
-
-        if ($is_hours == false)
+        if ($is_hours)
         {
-
-            $json = json_encode($list, JSON_UNESCAPED_UNICODE);
-            return [true, $list, $json, $rows_count];
-        }
-        else
-        {
-
             $table_by_hour = array();
             $table_by_hour[0] = $list[0];
             for ($i = 1;$i < count($list);$i++)
@@ -58,16 +33,12 @@ function from_db_to_json($calendar, $is_hours)
                     $table_by_hour[] = $list[$i];
                 }
             }
-            $json = json_encode($table_by_hour, JSON_UNESCAPED_UNICODE);
-            return [true, $table_by_hour, $json, 24];
+            $list = $table_by_hour;
         }
-
+        return $list;
     }
     else
     {
-        return (false);
+        return null;
     }
 }
-from_db_to_json($_GET["calendar"], $_GET["is_hours"]);
-echo from_db_to_json($_GET["calendar"], $_GET["is_hours"]) [2];
-
