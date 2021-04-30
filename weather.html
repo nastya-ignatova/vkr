@@ -1,0 +1,112 @@
+
+<head>
+    <meta charset="utf-8" />
+    <style>
+        html, body, #container {
+            width: 100%;
+            height: 550px;
+            margin: 0;
+            padding: 0;
+            margin-right:auto;
+        padding-right: auto;
+        }
+
+        @font-face {
+font-family: 'Play-Bold';
+src: url('Play-Bold.ttf');
+}
+.text_effect {
+font-family: 'Play-Bold';
+color: rgb(0, 0, 0);
+font-size: 45px;
+}
+@font-face {
+font-family: 'Play';
+src: url('Play.ttf');
+}
+.font_mpei {
+font-family: 'Play';
+color: rgb(0, 0, 0);
+font-size: 36px;
+
+}
+
+button {
+    border: 1px solid #e34761; /* Параметры рамки */
+    background: #ffffff; /* Цвет фона */
+    font-size: 14px; /* Размер текста */
+    padding: 5px 20px; /* Поля вокруг текста */
+    font-family: 'Play-Bold';
+    border-radius: 5px;
+   }
+select{
+    border: 1px solid; /* Параметры рамки */
+    font-size: 14px; /* Размер текста */
+    padding: 5px 20px; /* Поля вокруг текста */
+    font-family: 'Play-Bold';
+    border-radius: 5px;
+}  
+input{
+    border: 1px solid; /* Параметры рамки */
+    font-size: 14px; /* Размер текста */
+    padding: 5px 20px; /* Поля вокруг текста */
+    font-family: 'Play-Bold';
+    border-radius: 5px;
+} 
+    </style>
+    <title>Сайт погодной станции ИГВИЭ НИУ МЭИ</title>
+    <link type="image/png" sizes="16x16" rel="icon" href="favikon.png">
+</head>
+<body>
+    <table width="100%"><tr>
+        <td><div class="text_effect" ><font size="3">Данные с погодной станции, установленной на базе института ИГВИЭ унивеситета ФГБОУ ВО "НИУ МЭИ".</font>
+            <br>Сводные данные результатов измерений
+        </td><td>
+        <img src="27-10-2017-2.png" alt="Сайт погодной станции ИГВИЭ МЭИ" height="150px"  margin-right="5px"></div>
+        </td>
+        </tr>
+        </table>
+<table align="center" width="100%"> 
+    <tr>
+        <td>
+            <form method="POST" action="">
+
+                <p class ="font_mpei" style=" font-size: 26px; font-weight:200; padding-left:10px"> <label for="date">Дата: </label>
+                    <input type="date" id="date1" name="date1" value="$calendar1" >&nbsp;&nbsp;&nbsp;
+                    <input type="date" id="date2" name="date2" value="$calendar2" >&nbsp;&nbsp;&nbsp;
+                    <button type="submit" name="submit">Ок</button>&nbsp;&nbsp;&nbsp;
+                    <select id="sampling_step" onchange="reload()">
+                        <option value="by_1_hour" id="by_1_hour">раз в 1 час</option>
+                        <option value="by_2_hour" id="by_2_hour">раз в 2 часа</option>
+                        <option value="by_12_hour" id="by_12_hour">раз в 12 часов</option>
+                        <option value="daily_average" id="daily_average">Среднесуточное значение</option>
+                        <option value="all_values" id ="all_values">Все значения</option>
+                    </select>&nbsp;&nbsp;&nbsp;
+                    <select>
+                        <option>Все графики</option>
+                        <option>Скорость ветра</option>
+                        <option>Напр-е ветра</option>
+                        <option>Атм.давление</option>
+                        <option>Температура</option>
+                        <option>Отн.влажность</option>
+                    </select>&nbsp;&nbsp;&nbsp;
+                    <select>
+                        <option>Формат CSV</option>
+                        <option>Формат Excel</option>
+                    </select>
+                </p>
+                    <p>
+                        <center ><p class="font_mpei">
+                        <script src="weather.js"></script>
+                     
+                    <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
+                    $main_html
+                        </p>
+                </center>
+
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
