@@ -1,96 +1,90 @@
 <?php
 include "config.php";
 include "utils.php";
-
-if (isset($_POST['date']) && $_POST['date'] != "")
+if (isset($_POST['date'])  || isset($_POST['date2']) )
 {
-    $calendar = $_POST['date'];
+    if ($_POST['date2']>=$_POST['date1']){
+        $calendar = $_POST['date1'];
+        $calendar2 = $_POST['date2']; 
+    }
+    else {
+        $calendar = date("Y-m-d");
+        $calendar2 = date("Y-m-d");  
+        
+    }
 }
-else
-{ //начало работы - устанавливается сегодняшняя дата
-    $calendar = date("Y-m-d");    
+else 
+{
+    $calendar = date("Y-m-d");
+    $calendar2 = date("Y-m-d");    
 }
-
+if(isset($_GET['sampling_step']) && $_GET['sampling_step']!=="")
+{
+    $sampling_step = $_GET['sampling_step'];
+}else
+{
+    $sampling_step ="by_1_hour";
+}
 $html = file_get_contents("weather.html");
-$html = str_replace('$calendar', "$calendar", $html);
-
+$html = str_replace('$calendar1', "$calendar", $html);
+$html = str_replace('$calendar2', "$calendar2", $html);
 $main_html = "";
 
 
-if (($_POST['date'] != "" && isset($_POST['date']))) //если дата установлена
+if ((isset($_GET['date']) && $_GET['date'] != "") || ( $calendar!=="")) //если дата установлена
 {
-    $list = from_db_to_json($calendar, true); // построчно вытаскиваем значения
+    $list = load_from_db($calendar,$calendar2, $sampling_step); // построчно вытаскиваем значения
     if ($list !== null)
     { //если данный день есть в БД
-        $main_html .= "<b><i><h2><center><font  face=\"Book antiqua\">Замеры на " . date("d.m.Y", strtotime($calendar)) . ":</font></b></i></h2></center>";
-        $main_html .= '<center><table border=0 id="main_table"><tr>';
-        $tbl_header = ';Время;Напряжение,В; Ток,А; Мощность,Вт;Pном;L;T';
+        if ($calendar==$calendar2)
+        {//если введен только один день
+            $main_html .= "<p class=\"text_effect\" style=\"margin-bottom:3px;font-size: 40px;\">Замеры на " . date("d.m.Y", strtotime($calendar))."</p>";
+        }
+        else
+        {//если диапазон
+            $main_html .= "<p class=\"text_effect\" style=\"margin-bottom:3px;font-size: 40px;\">Замеры на " . date("d.m.Y", strtotime($calendar))." - ".date("d.m.Y", strtotime($calendar2))."</p>";
+
+        }
+        $main_html .= '<table border=0 id="main_table"><tr>';
+        $tbl_header = ';Дата;Время;Скорость ветра, м/c; Напр-е ветра; Атм. давление, гПа;Температура;Отн. влажность, %';         
         $dat_arr = explode(";", $tbl_header);
 
         for ($p = 1;$p < count($dat_arr);$p++)
         {
-            $main_html .= "<td bgcolor=lightblue><center><b><i>$dat_arr[$p]";
+            $main_html .= "<td bgcolor=ff9494 class=\"text_effect\" style=\" font-size: 18px;\"><center>$dat_arr[$p]";
         }
         $main_html .= "</tr>";
-        for ($i = 0;$i < count($list);$i++)
-        { //цикл по строкам
-            $main_html .= "<tr>";
-            for ($f = 1;$f < 8;$f++)
-            { //цикл по столбцам
-                $main_html .= "<td bgcolor=lightblue><center><b><i>" . $list[$i][$f];
-            }
-
-            $main_html .= "</tr>";
-        }
-        $main_html .= "</table></center>";
-        $main_html .=  ' <div id="container"></div><script> buildCharts(' . json_encode($list) . '); </script>';
+        $main_html .= "</table>";
+        $main_html .= "<button type=\"submit\" name=\"download\" id=\"download\" style=\" margin-top: 15px;\">Загрузить таблицу</button>";  
+        $main_html .=  ' <div id="container"></div><script> updateData(' . json_encode($list) . '); </script>';
 
     }
     else
     {
-        $main_html .=  '<p><font size="7"  face="Book antiqua">Замеров за эту дату нет</font>';
+        $main_html .=  '<p class="text_effect" style=\" align: center;\">Замеров за эту дату нет<p class="font_mpei" style=\" align: center;\">К сожалению, наш сайт существует совсем недавно, поэтому значения за какой-то период могут отсутствовать. Мы стараемся регулярно пополнять наши архивы, чтобы было удобно следить за погодными данными!';
     }
 }
 else
 {
-    $main_html .= '<p><font size="7"  face="Book antiqua">Введите дату</font>';
+    $main_html .= '<p class="text_effect" style=" padding-top:90px;">Пожалуйста, введите дату';
 }
+
 if (isset($_POST['download']))
 {
-    for ($i = 0;$i < count($list);$i++)
-    { //цикл по строкам
-        for ($f = 1;$f < 8;$f++)
-        { //цикл по столбцам
-            $content .= $list[$i][$f].';';
-        }
-
-        $content .= "\r\n";
+    $filename = $calendar.".csv";
+    $fp = fopen($filename, 'w');
+    foreach ($list as $fields) {
+        fputcsv($fp, $fields);
     }
- 
-    $filename = $calendar . '.csv';
-
-    // заставляем браузер показать окно сохранения файла
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename=' . basename($filename));
-    header('Content-Length: ' . filesize($filename));
+    fclose($fp);
+    $content = file_get_contents($filename);
+    header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=' . basename($filename));
+            header('Content-Length: ' . filesize($filename));
     echo $content;
+    unlink($filename);
     exit;
-
-
-
-/*
-    $filed = $calendar.".csv";
-    for ($i = 0;$i < count($list);$i++)
-    { //цикл по строкам
-        for ($f = 1;$f < 8;$f++)
-        { //цикл по столбцам
-            $rez .= $list[$i][$f].';';
-        }
-
-        $rez .= "\r\n";
-    }
-    file_put_contents($filed, $rez);
-*/
 }
+
 $html = str_replace('$main_html', "$main_html", $html);
 echo  $html;
