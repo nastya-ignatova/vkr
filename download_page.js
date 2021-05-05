@@ -34,8 +34,7 @@ function buildChart(data,y_index,y_title, chart_title, series_title) {
 }
 
 function buildChart_wind_direction(data,y_index,y_title, chart_title, series_title) {
-
-     var data_1 = [
+         var data_1 = [
         {x: "Север", value: 0},
         {x: "Северо-восток", value: 0},      
         {x: "Восток", value: 0},
@@ -120,7 +119,7 @@ function reload() {
     }
     let date1 = document.getElementById('date1').value;
     let date2 = document.getElementById('date2').value;
-    const nextURL = `http://localhost/weather/weather.php?calendar=${date1}&calendar2=${date2}&sampling_step=${sampling_step}`;
+    const nextURL = `http://localhost/weather/download_page.php?calendar=${date1}&calendar2=${date2}&sampling_step=${sampling_step}`;
     const nextTitle = 'My new page title';
     const nextState = { additionalInformation: 'Updated the URL with JS' };
     window.history.pushState(nextState, nextTitle, nextURL);
@@ -130,16 +129,13 @@ function reload() {
             if (err !== null) {
                 alert('Something went wrong: ' + err);
             } else {
-                //alert(data[0]);                 
                 updateData(data);
-               
             }
         }
     );
 }
 
 function updateData(data) {
-
     buildTable(data);
     buildCharts(data);
 }
