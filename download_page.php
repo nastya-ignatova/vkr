@@ -25,7 +25,7 @@ if(isset($_GET['sampling_step']) && $_GET['sampling_step']!=="")
 {
     $sampling_step ="by_1_hour";
 }
-$html = file_get_contents("weather.html");
+$html = file_get_contents("download_page.html");
 $html = str_replace('$calendar1', "$calendar", $html);
 $html = str_replace('$calendar2', "$calendar2", $html);
 $main_html = "";
@@ -56,8 +56,9 @@ if ((isset($_GET['date']) && $_GET['date'] != "") || ( $calendar!=="")) //есл
         $main_html .= "</tr>";
         $main_html .= "</table>";
         $main_html .= "<button type=\"submit\" name=\"download\" id=\"download\" style=\" margin-top: 15px;\">Загрузить таблицу</button>";  
-        $main_html .=  ' <div id="container"></div><script> updateData(' . json_encode($list).'); </script>';      
-       
+        $main_html .=  ' <div id="container"></div><script> updateData(' . json_encode($list) . '); </script>';
+        echo 'длина листа= '.strlen(json_encode($list)).'<p>';
+        //for ($i=0;$i< count())
     }
     else
     {
